@@ -89,4 +89,8 @@ public class ItemHandler {
 							.then(ServerResponse.noContent().build())
 							.switchIfEmpty(ServerResponse.notFound().build());
 	}
+	
+	public Mono<ServerResponse> itemException(ServerRequest request) {
+		throw new RuntimeException("RuntimeException Occurred");
+	}
 }

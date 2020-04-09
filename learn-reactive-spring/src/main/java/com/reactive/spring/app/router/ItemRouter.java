@@ -21,4 +21,9 @@ public class ItemRouter {
 				.andRoute(RequestPredicates.PUT(ItemConstants.ITEM_FUNCTIONAL_END_POINT_V1 + "/{id}"), handler::updateItem)
 				.andRoute(RequestPredicates.DELETE(ItemConstants.ITEM_FUNCTIONAL_END_POINT_V1 + "/{id}"), handler::deleteItem);
 	}
+	
+	@Bean
+	public RouterFunction<ServerResponse> errorRoute(ItemHandler handler) {
+		return RouterFunctions.route(RequestPredicates.GET("/func/runtimeException"), handler::itemException);
+	}
 }

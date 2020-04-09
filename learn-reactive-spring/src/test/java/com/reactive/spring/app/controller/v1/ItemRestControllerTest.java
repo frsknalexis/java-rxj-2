@@ -1,5 +1,6 @@
 package com.reactive.spring.app.controller.v1;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
@@ -184,5 +185,18 @@ public class ItemRestControllerTest {
 					.body(Mono.just(item), Item.class)
 					.exchange()
 					.expectStatus().isNotFound();
+	}
+	
+	@Test
+	public void runtimeException() {
+		webTestClient.get()
+					.uri(ItemConstants.ITEM_END_POINT_V1.concat("/runtimeException"))
+					.exchange()
+					.expectStatus().is5xxServerError()
+					.expectBody(String.class)
+					.consumeWith((response) -> {
+						String stringResponse = response.getResponseBody();
+						assertEquals("Runtime Exception Occurred.", stringResponse);
+					});
 	}
 }

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,14 @@ import reactor.core.publisher.Mono;
 @RestController
 @Slf4j
 public class ItemRestController {
+	
+	/* DE MANERA INDEPENDIENTE EN CADA CONTROLLER SE MANEJA LA EXCEPCION
+	@ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+		log.error("Exception caught in handleRuntimeException :  {}", ex);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+	}
+	*/
 
 	@Autowired
 	@Qualifier("itemRepository")
@@ -96,5 +105,11 @@ public class ItemRestController {
 							.body(itemResponse);
 				})
 				.defaultIfEmpty(ResponseEntity.notFound().build());
+	}
+	
+	@GetMapping(value = ItemConstants.ITEM_END_POINT_V1 + "/runtimeException")
+	public Flux<Item> runtimeException() {
+		return itemRepository.findAll()
+							.concatWith(Mono.error(new RuntimeException("Runtime Exception Occurred.")));
 	}
 }

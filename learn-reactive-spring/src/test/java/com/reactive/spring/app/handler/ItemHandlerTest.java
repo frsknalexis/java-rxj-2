@@ -179,4 +179,17 @@ public class ItemHandlerTest {
 					.expectStatus().isNoContent()
 					.expectBody(Void.class);
 	}
+	
+	@Test
+	public void runtimeException() {
+		webTestClient.get()
+					.uri("/func/runtimeException")
+					.exchange()
+					.expectStatus().is5xxServerError()
+					.expectBody(String.class)
+					.consumeWith((response) -> {
+						String stringResponse = response.getResponseBody();
+						assertEquals("RuntimeException Occurred", stringResponse);
+					});
+	}
 }
