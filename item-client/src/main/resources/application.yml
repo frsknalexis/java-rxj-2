@@ -1,0 +1,7 @@
+#spring configuration
+spring:
+  application:
+    name: item-client-service
+
+server:
+  port: 8090
