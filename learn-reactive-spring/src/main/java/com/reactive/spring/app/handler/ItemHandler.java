@@ -12,6 +12,8 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.reactive.spring.app.constants.ItemConstants;
 import com.reactive.spring.app.document.Item;
+import com.reactive.spring.app.document.ItemCapped;
+import com.reactive.spring.app.repository.ItemCappedRepository;
 import com.reactive.spring.app.repository.ItemRepository;
 
 import reactor.core.publisher.Flux;
@@ -23,6 +25,10 @@ public class ItemHandler {
 	@Autowired
 	@Qualifier("itemRepository")
 	private ItemRepository itemRepository;
+	
+	@Autowired
+	@Qualifier("itemCappedRepository")
+	private ItemCappedRepository itemCappedRepository;
 	
 	public Mono<ServerResponse> getAllItems(ServerRequest request) {
 		Flux<Item> itemsFlux = itemRepository.findAll();
@@ -92,5 +98,12 @@ public class ItemHandler {
 	
 	public Mono<ServerResponse> itemException(ServerRequest request) {
 		throw new RuntimeException("RuntimeException Occurred");
+	}
+	
+	public Mono<ServerResponse> itemsStream(ServerRequest request) {
+		Flux<ItemCapped> itemCappedFlux = itemCappedRepository.findItemsBy();
+		return ServerResponse.ok()
+							.contentType(MediaType.APPLICATION_STREAM_JSON)
+							.body(itemCappedFlux, ItemCapped.class);
 	}
 }

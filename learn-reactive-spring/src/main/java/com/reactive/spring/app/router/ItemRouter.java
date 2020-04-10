@@ -26,4 +26,9 @@ public class ItemRouter {
 	public RouterFunction<ServerResponse> errorRoute(ItemHandler handler) {
 		return RouterFunctions.route(RequestPredicates.GET("/func/runtimeException"), handler::itemException);
 	}
+	
+	@Bean
+	public RouterFunction<ServerResponse> itemStreamRoute(ItemHandler handler) {
+		return RouterFunctions.route(RequestPredicates.GET(ItemConstants.ITEM_STREAM_FUNCTIONAL_END_POINT_V1), handler::itemsStream);
+	}
 }
